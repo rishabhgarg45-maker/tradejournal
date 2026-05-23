@@ -52,34 +52,35 @@ export default function DashboardPage() {
   const recentTrades = trades.slice(0, 10)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
         <Link href="/trades/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            New Trade
+          <Button size="sm" className="sm:h-9 sm:px-4">
+            <Plus className="h-4 w-4 mr-1.5" />
+            <span className="hidden sm:inline">New Trade</span>
+            <span className="sm:hidden">New</span>
           </Button>
         </Link>
       </div>
 
       <StatsCards stats={stats} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <EquityCurve data={equityData} />
         <MonthlyPnLChart data={monthlyData} />
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm">Recent Trades</CardTitle>
             <Link href="/trades">
-              <Button variant="outline" size="sm">View All</Button>
+              <Button variant="outline" size="sm" className="text-xs h-8">View All</Button>
             </Link>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
           <TradeTable
             trades={recentTrades}
             onDelete={async (id) => {

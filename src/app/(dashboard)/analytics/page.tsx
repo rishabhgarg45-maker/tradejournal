@@ -79,23 +79,23 @@ export default function AnalyticsPage() {
     .slice(0, 10)
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Analytics</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <h1 className="text-xl sm:text-2xl font-bold">Analytics</h1>
 
       <StatsCards stats={stats} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <EquityCurve data={equityData} />
         <MonthlyPnLChart data={monthlyData} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">Win / Loss Distribution</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[220px] sm:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -141,7 +141,7 @@ export default function AnalyticsPage() {
             <CardTitle className="text-sm">Top Symbol Performance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
+            <div className="h-[220px] sm:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={topSymbols} layout="vertical">
                   <XAxis type="number" tick={{ fontSize: 11 }} tickFormatter={(val) => `$${val}`} />

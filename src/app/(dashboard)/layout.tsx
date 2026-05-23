@@ -36,12 +36,13 @@ export default function DashboardLayout({
     <div className="flex h-screen overflow-hidden">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 overflow-y-auto">
-        <div className="lg:hidden flex items-center p-4 border-b border-border">
-          <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)}>
+        <div className="lg:hidden flex items-center sticky top-0 z-30 bg-background/95 backdrop-blur-sm px-3 py-2.5 border-b border-border">
+          <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(true)} className="h-10 w-10 min-w-[40px] active:scale-95 transition-transform">
             <Menu className="h-5 w-5" />
           </Button>
+          <span className="ml-2 text-sm font-semibold">TradeJournal</span>
         </div>
-        <div className="p-4 lg:p-8">
+        <div className="p-3 sm:p-4 lg:p-8">
           {children}
         </div>
       </main>

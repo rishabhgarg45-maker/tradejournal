@@ -51,23 +51,24 @@ export default function TradesPage() {
   )
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Trades</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold">Trades</h1>
         <Link href="/trades/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            New Trade
+          <Button size="sm" className="sm:h-9 sm:px-4">
+            <Plus className="h-4 w-4 mr-1.5" />
+            <span className="hidden sm:inline">New Trade</span>
+            <span className="sm:hidden">New</span>
           </Button>
         </Link>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by symbol..."
-            className="pl-9"
+            placeholder="Search symbol..."
+            className="pl-9 h-9 sm:h-10 text-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -75,7 +76,7 @@ export default function TradesPage() {
         <Select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="w-32"
+          className="w-24 sm:w-32 h-9 sm:h-10 text-sm"
         >
           <option value="ALL">All</option>
           <option value="CLOSED">Closed</option>

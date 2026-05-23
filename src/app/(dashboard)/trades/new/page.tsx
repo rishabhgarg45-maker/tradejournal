@@ -43,12 +43,12 @@ export default function NewTradePage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Log New Trade</h1>
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Log New Trade</h1>
       <Card>
-        <CardHeader>
+        <CardHeader className="p-4 sm:p-6">
           <CardTitle className="text-sm">Trade Details</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0">
           <TradeForm onSubmit={handleSubmit} />
         </CardContent>
       </Card>

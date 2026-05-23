@@ -26,7 +26,7 @@ export function EquityCurve({ data }: EquityCurveProps) {
         <CardTitle className="text-sm">Equity Curve</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[220px] sm:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
