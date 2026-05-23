@@ -1,26 +1,34 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-background: oklch(0.15 0.01 0);
+  --color-foreground: oklch(0.95 0.01 0);
+  --color-card: oklch(0.18 0.01 0);
+  --color-card-foreground: oklch(0.95 0.01 0);
+  --color-popover: oklch(0.18 0.01 0);
+  --color-popover-foreground: oklch(0.95 0.01 0);
+  --color-primary: oklch(0.65 0.25 142);
+  --color-primary-foreground: oklch(1 0 0);
+  --color-secondary: oklch(0.25 0.01 0);
+  --color-secondary-foreground: oklch(0.95 0.01 0);
+  --color-muted: oklch(0.25 0.01 0);
+  --color-muted-foreground: oklch(0.6 0.01 0);
+  --color-accent: oklch(0.25 0.01 0);
+  --color-accent-foreground: oklch(0.95 0.01 0);
+  --color-destructive: oklch(0.6 0.25 25);
+  --color-destructive-foreground: oklch(1 0 0);
+  --color-border: oklch(0.28 0.01 0);
+  --color-input: oklch(0.28 0.01 0);
+  --color-ring: oklch(0.65 0.25 142);
+  --radius: 0.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--color-border);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
