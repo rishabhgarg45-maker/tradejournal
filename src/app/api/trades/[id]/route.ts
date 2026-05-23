@@ -65,6 +65,7 @@ export async function PUT(
         notes: body.notes || null,
         trade_type: body.trade_type,
         status: body.exit_price ? 'CLOSED' : 'OPEN',
+        contract_multiplier: body.contract_multiplier || null,
       })
       .eq('id', id)
       .eq('user_id', user.id)

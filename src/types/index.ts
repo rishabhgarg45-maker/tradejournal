@@ -22,6 +22,8 @@ export interface Trade {
   screenshot_url: string | null
   trade_type: TradeType
   status: TradeStatus
+  contract_multiplier: number | null
+  contract_name: string | null
   created_at: string
   updated_at: string
 }
@@ -42,6 +44,7 @@ export interface TradeFormData {
   tags?: string[]
   notes?: string
   trade_type: TradeType
+  contract_multiplier?: number
 }
 
 export interface TradeStats {

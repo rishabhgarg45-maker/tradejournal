@@ -25,6 +25,8 @@ CREATE TABLE trades (
   screenshot_url TEXT,
   trade_type VARCHAR(10) NOT NULL CHECK (trade_type IN ('DAY', 'SWING', 'SCALP')),
   status VARCHAR(10) NOT NULL DEFAULT 'CLOSED' CHECK (status IN ('OPEN', 'CLOSED')),
+  contract_multiplier DECIMAL(12, 2),
+  contract_name VARCHAR(100),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -68,6 +68,7 @@ export async function POST(request: Request) {
         notes: body.notes || null,
         trade_type: body.trade_type,
         status: body.exit_price ? 'CLOSED' : 'OPEN',
+        contract_multiplier: body.contract_multiplier || null,
       })
       .select()
       .single()

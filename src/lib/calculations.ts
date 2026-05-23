@@ -1,16 +1,23 @@
 import { Trade, TradeStats, EquityPoint, MonthlyPnL } from "@/types"
+import { getMultiplier } from "./cme-futures"
+
+function getContractMultiplier(trade: Trade): number {
+  return trade.contract_multiplier ?? getMultiplier(trade.symbol)
+}
 
 export function calculatePnL(trade: Trade): number {
   if (!trade.exit_price) return 0
-  const multiplier = trade.direction === 'LONG' ? 1 : -1
-  return (trade.exit_price - trade.entry_price) * trade.quantity * multiplier - trade.fees
+  const dir = trade.direction === 'LONG' ? 1 : -1
+  const cm = getContractMultiplier(trade)
+  return (trade.exit_price - trade.entry_price) * cm * trade.quantity * dir - trade.fees
 }
 
 export function calculateRR(trade: Trade): number {
   if (!trade.exit_price || !trade.stop_loss) return 0
-  const risk = Math.abs(trade.entry_price - trade.stop_loss) * trade.quantity
+  const cm = getContractMultiplier(trade)
+  const risk = Math.abs(trade.entry_price - trade.stop_loss) * cm * trade.quantity
   if (risk === 0) return 0
-  const reward = Math.abs(trade.exit_price - trade.entry_price) * trade.quantity
+  const reward = Math.abs(trade.exit_price - trade.entry_price) * cm * trade.quantity
   return reward / risk
 }
 

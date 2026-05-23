@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { TradeFormData } from '@/types'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { SymbolInput } from '@/components/symbol-input'
+import { CmeContract } from '@/lib/cme-futures'
 
 const tradeSchema = z.object({
   symbol: z.string().min(1, 'Symbol is required').max(20),
@@ -35,7 +38,8 @@ interface TradeFormProps {
 }
 
 export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<TradeFormValues>({
+  const [detectedContract, setDetectedContract] = useState<CmeContract | null>(null)
+  const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, watch } = useForm<TradeFormValues>({
     resolver: zodResolver(tradeSchema),
     defaultValues: {
       symbol: initialData?.symbol || '',
@@ -80,6 +84,7 @@ export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) 
       setup: data.setup || undefined,
       notes: data.notes || undefined,
       trade_type: data.trade_type,
+      contract_multiplier: detectedContract?.multiplier,
       tags,
     })
   }
@@ -89,7 +94,11 @@ export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="symbol">Symbol</Label>
-          <Input id="symbol" placeholder="AAPL" {...register('symbol')} />
+          <SymbolInput
+            value={watch('symbol')}
+            onChange={(val) => setValue('symbol', val)}
+            onContractDetected={setDetectedContract}
+          />
           {errors.symbol && <p className="text-xs text-red-500">{errors.symbol.message}</p>}
         </div>
 

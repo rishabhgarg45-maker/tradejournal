@@ -33,6 +33,7 @@ export default function NewTradePage() {
       notes: data.notes || null,
       trade_type: data.trade_type,
       status: data.exit_price ? 'CLOSED' : 'OPEN',
+      contract_multiplier: data.contract_multiplier ?? null,
     })
 
     if (!error) {

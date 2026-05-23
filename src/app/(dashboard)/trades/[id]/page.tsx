@@ -56,6 +56,7 @@ export default function EditTradePage() {
         notes: formData.notes || null,
         trade_type: formData.trade_type,
         status: formData.exit_price ? 'CLOSED' : 'OPEN',
+        contract_multiplier: formData.contract_multiplier ?? null,
       })
       .eq('id', params.id)
       .eq('user_id', user.id)
