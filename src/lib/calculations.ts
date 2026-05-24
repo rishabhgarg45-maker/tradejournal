@@ -22,7 +22,9 @@ export function calculateRR(trade: Trade): number {
 }
 
 export function calculateStats(trades: Trade[]): TradeStats {
-  const closedTrades = trades.filter(t => t.status === 'CLOSED')
+  const closedTrades = trades
+    .filter(t => t.status === 'CLOSED')
+    .sort((a, b) => new Date(a.entry_date).getTime() - new Date(b.entry_date).getTime())
   const total = closedTrades.length
 
   if (total === 0) {
