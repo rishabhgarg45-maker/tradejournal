@@ -76,8 +76,80 @@ const contracts: CmeContract[] = [
   { symbol: '6Z', name: 'South African Rand', exchange: 'CME', category: 'Currency', multiplier: 500000, tickSize: 0.0005, tickValue: 25.00, currency: 'USD' },
 ]
 
+// === FOREX (Spot FX) ===
+// Standard lot = 100,000 units. Price diff in quote currency × 100,000 = P&L in quote currency.
+// For pairs where USD is the quote (EURUSD, GBPUSD, etc.), P&L is in USD.
+const forexContracts: CmeContract[] = [
+  // --- Majors (USD quoted) ---
+  { symbol: 'EURUSD', name: 'Euro / US Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'USD' },
+  { symbol: 'GBPUSD', name: 'British Pound / US Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'USD' },
+  { symbol: 'AUDUSD', name: 'Australian Dollar / US Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'USD' },
+  { symbol: 'NZDUSD', name: 'New Zealand Dollar / US Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'USD' },
+
+  // --- Majors (non-USD quote) ---
+  { symbol: 'USDJPY', name: 'US Dollar / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'USDCHF', name: 'US Dollar / Swiss Franc', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CHF' },
+  { symbol: 'USDCAD', name: 'US Dollar / Canadian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CAD' },
+
+  // --- Crosses ---
+  { symbol: 'EURGBP', name: 'Euro / British Pound', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'GBP' },
+  { symbol: 'EURJPY', name: 'Euro / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'EURCHF', name: 'Euro / Swiss Franc', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CHF' },
+  { symbol: 'EURAUD', name: 'Euro / Australian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'AUD' },
+  { symbol: 'EURCAD', name: 'Euro / Canadian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CAD' },
+  { symbol: 'EURNZD', name: 'Euro / New Zealand Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'NZD' },
+  { symbol: 'GBPJPY', name: 'British Pound / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'GBPCHF', name: 'British Pound / Swiss Franc', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CHF' },
+  { symbol: 'GBPAUD', name: 'British Pound / Australian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'AUD' },
+  { symbol: 'GBPCAD', name: 'British Pound / Canadian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CAD' },
+  { symbol: 'AUDJPY', name: 'Australian Dollar / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'AUDCHF', name: 'Australian Dollar / Swiss Franc', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CHF' },
+  { symbol: 'AUDCAD', name: 'Australian Dollar / Canadian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CAD' },
+  { symbol: 'AUDNZD', name: 'Australian Dollar / New Zealand Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'NZD' },
+  { symbol: 'NZDJPY', name: 'New Zealand Dollar / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'NZDCHF', name: 'New Zealand Dollar / Swiss Franc', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CHF' },
+  { symbol: 'NZDCAD', name: 'New Zealand Dollar / Canadian Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'CAD' },
+  { symbol: 'CADJPY', name: 'Canadian Dollar / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+  { symbol: 'CHFJPY', name: 'Swiss Franc / Japanese Yen', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.001, tickValue: 100.00, currency: 'JPY' },
+
+  // --- Exotics ---
+  { symbol: 'USDMXN', name: 'US Dollar / Mexican Peso', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'MXN' },
+  { symbol: 'USDZAR', name: 'US Dollar / South African Rand', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'ZAR' },
+  { symbol: 'USDSGD', name: 'US Dollar / Singapore Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'SGD' },
+  { symbol: 'USDHKD', name: 'US Dollar / Hong Kong Dollar', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.00001, tickValue: 1.00, currency: 'HKD' },
+  { symbol: 'USDTRY', name: 'US Dollar / Turkish Lira', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'TRY' },
+  { symbol: 'USDNOK', name: 'US Dollar / Norwegian Krone', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'NOK' },
+  { symbol: 'USDSEK', name: 'US Dollar / Swedish Krona', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'SEK' },
+  { symbol: 'USDPLN', name: 'US Dollar / Polish Zloty', exchange: 'FOREX', category: 'Currency', multiplier: 100000, tickSize: 0.0001, tickValue: 10.00, currency: 'PLN' },
+
+  // --- Metals (CFD) ---
+  { symbol: 'XAUUSD', name: 'Spot Gold / US Dollar', exchange: 'SPOT', category: 'Metal', multiplier: 100, tickSize: 0.01, tickValue: 1.00, currency: 'USD' },
+  { symbol: 'XAGUSD', name: 'Spot Silver / US Dollar', exchange: 'SPOT', category: 'Metal', multiplier: 5000, tickSize: 0.001, tickValue: 5.00, currency: 'USD' },
+  { symbol: 'XPTUSD', name: 'Spot Platinum / US Dollar', exchange: 'SPOT', category: 'Metal', multiplier: 50, tickSize: 0.10, tickValue: 5.00, currency: 'USD' },
+  { symbol: 'XPDUSD', name: 'Spot Palladium / US Dollar', exchange: 'SPOT', category: 'Metal', multiplier: 100, tickSize: 0.05, tickValue: 5.00, currency: 'USD' },
+  { symbol: 'XAUXAG', name: 'Spot Gold / Spot Silver', exchange: 'SPOT', category: 'Metal', multiplier: 1, tickSize: 0.01, tickValue: 0.01, currency: 'USD' },
+
+  // --- Indices (CFD) ---
+  { symbol: 'SPX500', name: 'S&P 500 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'USD' },
+  { symbol: 'NAS100', name: 'Nasdaq 100 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'USD' },
+  { symbol: 'US30', name: 'US Dow Jones 30 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'USD' },
+  { symbol: 'UK100', name: 'UK FTSE 100 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'GBP' },
+  { symbol: 'GER40', name: 'Germany DAX 40 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'EUR' },
+  { symbol: 'JPN225', name: 'Japan Nikkei 225 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'JPY' },
+  { symbol: 'AUS200', name: 'Australia ASX 200 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'AUD' },
+  { symbol: 'US2000', name: 'US Russell 2000 CFD', exchange: 'SPOT', category: 'Index', multiplier: 1, tickSize: 0.1, tickValue: 0.10, currency: 'USD' },
+  { symbol: 'VIX', name: 'Volatility Index CFD', exchange: 'SPOT', category: 'Index', multiplier: 1000, tickSize: 0.01, tickValue: 10.00, currency: 'USD' },
+
+  // --- Commodities (CFD) ---
+  { symbol: 'USOIL', name: 'US Oil (WTI) CFD', exchange: 'SPOT', category: 'Energy', multiplier: 1000, tickSize: 0.01, tickValue: 10.00, currency: 'USD' },
+  { symbol: 'UKOIL', name: 'UK Oil (Brent) CFD', exchange: 'SPOT', category: 'Energy', multiplier: 1000, tickSize: 0.01, tickValue: 10.00, currency: 'USD' },
+  { symbol: 'NATGAS', name: 'Natural Gas CFD', exchange: 'SPOT', category: 'Energy', multiplier: 10000, tickSize: 0.001, tickValue: 10.00, currency: 'USD' },
+]
+
+const allContracts = [...contracts, ...forexContracts]
+
 const contractMap = new Map<string, CmeContract>(
-  contracts.map(c => [c.symbol, c])
+  allContracts.map(c => [c.symbol, c])
 )
 
 const MONTH_CODES = new Set(['F','G','H','J','K','M','N','Q','U','V','X','Z'])
@@ -107,16 +179,16 @@ export function getMultiplier(symbol: string): number {
 export function searchContracts(query: string): CmeContract[] {
   const q = query.toUpperCase()
   if (!q) return []
-  return contracts.filter(c =>
+  return allContracts.filter(c =>
     c.symbol.startsWith(q) ||
     c.name.toUpperCase().includes(q)
   ).slice(0, 10)
 }
 
 export function getAllCategories() {
-  return [...new Set(contracts.map(c => c.category))]
+  return [...new Set(allContracts.map(c => c.category))]
 }
 
 export function getContractsByCategory(category: string): CmeContract[] {
-  return contracts.filter(c => c.category === category)
+  return allContracts.filter(c => c.category === category)
 }

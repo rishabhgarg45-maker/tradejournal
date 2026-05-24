@@ -45,7 +45,7 @@ export function SymbolInput({ value, onChange, onContractDetected }: SymbolInput
   return (
     <div ref={ref} className="relative">
       <Input
-        placeholder="ES, NQ, CL, AAPL..."
+        placeholder="ES, NQ, XAUUSD, EURUSD..."
         value={value}
         onChange={(e) => onChange(e.target.value.toUpperCase())}
         onFocus={() => {

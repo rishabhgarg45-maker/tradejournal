@@ -12,7 +12,7 @@ CREATE TABLE trades (
   direction VARCHAR(5) NOT NULL CHECK (direction IN ('LONG', 'SHORT')),
   entry_price DECIMAL(12, 5) NOT NULL,
   exit_price DECIMAL(12, 5),
-  quantity INTEGER NOT NULL,
+  quantity DECIMAL(12, 2) NOT NULL,
   entry_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   exit_date TIMESTAMPTZ,
   stop_loss DECIMAL(12, 5),
