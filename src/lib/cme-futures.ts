@@ -80,12 +80,28 @@ const contractMap = new Map<string, CmeContract>(
   contracts.map(c => [c.symbol, c])
 )
 
+const MONTH_CODES = new Set(['F','G','H','J','K','M','N','Q','U','V','X','Z'])
+
+export function normalizeSymbol(raw: string): string {
+  const upper = raw.toUpperCase().trim()
+  // Full match first
+  if (contractMap.has(upper)) return upper
+  // Strip futures month/year suffix: e.g. MGCM6 -> MGC, ESZ5 -> ES, NQH26 -> NQ
+  // Month is a letter FGHJKMNQUVXZ, year is 0-9
+  // The base symbol is the longest prefix that exists in the contract map
+  for (let len = upper.length - 2; len >= 1; len--) {
+    const candidate = upper.slice(0, len)
+    if (contractMap.has(candidate)) return candidate
+  }
+  return upper
+}
+
 export function getContract(symbol: string): CmeContract | undefined {
-  return contractMap.get(symbol.toUpperCase())
+  return contractMap.get(normalizeSymbol(symbol))
 }
 
 export function getMultiplier(symbol: string): number {
-  return contractMap.get(symbol.toUpperCase())?.multiplier ?? 1
+  return contractMap.get(normalizeSymbol(symbol))?.multiplier ?? 1
 }
 
 export function searchContracts(query: string): CmeContract[] {

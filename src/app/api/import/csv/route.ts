@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
+import { getContract } from '@/lib/cme-futures'
 
 function parseCSV(text: string): { headers: string[]; rows: string[][] } {
   const lines = text.trim().split('\n')
@@ -237,14 +238,14 @@ export async function POST(request: Request) {
         continue
       }
 
-      if (cols.strategy !== undefined) {
-        void get(cols.strategy)
-      }
       const strategy = cols.strategy !== undefined ? get(cols.strategy) || null : null
       const notes = cols.notes !== undefined ? get(cols.notes) || null : null
       let tradeType = cols.trade_type !== undefined ? get(cols.trade_type) : 'DAY'
-
       if (!['DAY', 'SWING', 'SCALP'].includes(tradeType)) tradeType = 'DAY'
+
+      const contract = getContract(symbol)
+      const contractMultiplier = contract?.multiplier ?? null
+      const contractName = contract?.name ?? null
 
       const { error } = await supabase.from('trades').insert({
         user_id: user.id,
@@ -260,6 +261,8 @@ export async function POST(request: Request) {
         notes,
         trade_type: tradeType,
         status: exitDate ? 'CLOSED' : 'OPEN',
+        contract_multiplier: contractMultiplier,
+        contract_name: contractName,
         tags: ['csv-import'],
       })
 

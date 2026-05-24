@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,7 +8,6 @@ import { ArrowLeft, Upload, CheckCircle2, AlertCircle, Loader2 } from 'lucide-re
 import Link from 'next/link'
 
 export default function ImportPage() {
-  const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
 
   const [csvText, setCsvText] = useState('')
