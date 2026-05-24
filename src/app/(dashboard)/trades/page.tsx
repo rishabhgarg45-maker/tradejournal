@@ -8,7 +8,7 @@ import { TradeTable } from '@/components/trade-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
-import { Plus, Search } from 'lucide-react'
+import { Plus, Search, Upload } from 'lucide-react'
 import Link from 'next/link'
 
 export default function TradesPage() {
@@ -54,13 +54,21 @@ export default function TradesPage() {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-xl sm:text-2xl font-bold">Trades</h1>
-        <Link href="/trades/new">
-          <Button size="sm" className="sm:h-9 sm:px-4">
-            <Plus className="h-4 w-4 mr-1.5" />
-            <span className="hidden sm:inline">New Trade</span>
-            <span className="sm:hidden">New</span>
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/trades/import">
+            <Button variant="outline" size="sm" className="sm:h-9">
+              <Upload className="h-4 w-4 mr-1.5" />
+              <span className="hidden sm:inline">Import</span>
+            </Button>
+          </Link>
+          <Link href="/trades/new">
+            <Button size="sm" className="sm:h-9 sm:px-4">
+              <Plus className="h-4 w-4 mr-1.5" />
+              <span className="hidden sm:inline">New Trade</span>
+              <span className="sm:hidden">New</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
