@@ -27,22 +27,42 @@ export async function authenticate(
   password: string,
   appId: string = 'TradeJournal',
   appVersion: string = '1.0',
-  useDemo: boolean = false
+  useDemo: boolean = false,
+  appSecret?: string
 ): Promise<TradovateCredentials> {
   const base = useDemo ? DEMO_URL : BASE_URL
+
+  const body: any = { name, password, appId, appVersion, cid: 'TradeJournal' }
+  if (appSecret) body.sec = appSecret
 
   const res = await fetch(`${base}/auth/accesstoken`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, password, appId, appVersion, cid: 'TradeJournal' }),
+    body: JSON.stringify(body),
   })
 
+  const text = await res.text()
+
   if (!res.ok) {
-    const err = await res.text()
-    throw new Error(`Tradovate auth failed: ${err}`)
+    let msg = text
+    try {
+      const j = JSON.parse(text)
+      msg = j.error || j.message || text
+    } catch {}
+    throw new Error(msg)
   }
 
-  const data = await res.json()
+  let data: any
+  try {
+    data = JSON.parse(text)
+  } catch {
+    throw new Error('Invalid response from Tradovate')
+  }
+
+  if (!data.accessToken) {
+    throw new Error(data.error || data.message || 'No access token received')
+  }
+
   const credentials: TradovateCredentials = {
     accessToken: data.accessToken,
     userId: data.userId,

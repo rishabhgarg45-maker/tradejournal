@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth-context'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -24,7 +22,6 @@ interface SyncResult {
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth()
-  const supabase = createClient()
 
   const [alpacaKey, setAlpacaKey] = useState('')
   const [alpacaSecret, setAlpacaSecret] = useState('')
@@ -33,13 +30,14 @@ export default function SettingsPage() {
 
   const [tvUsername, setTvUsername] = useState('')
   const [tvPassword, setTvPassword] = useState('')
-  const [tvAppId, setTvAppId] = useState('TradeJournal')
-  const [tvUseDemo, setTvUseDemo] = useState(false)
+  const [tvAppId, setTvAppId] = useState('')
+  const [tvAppSecret, setTvAppSecret] = useState('')
+  const [tvUseDemo, setTvUseDemo] = useState(true)
   const [tvSyncing, setTvSyncing] = useState(false)
   const [tvResult, setTvResult] = useState<SyncResult | null>(null)
 
-  const [excessResult, setExcessResult] = useState<SyncResult | null>(null)
-  const [copied, setCopied] = useState(false)
+  const [copyBtnLabel, setCopyBtnLabel] = useState('Copy')
+  const [webhookCopied, setWebhookCopied] = useState(false)
 
   const webhookUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/api/sync/webhook`
@@ -71,15 +69,18 @@ export default function SettingsPage() {
     setTvSyncing(true)
     setTvResult(null)
 
+    const body: any = {
+      username: tvUsername,
+      password: tvPassword,
+      useDemo: tvUseDemo,
+    }
+    if (tvAppId) body.appId = tvAppId
+    if (tvAppSecret) body.appSecret = tvAppSecret
+
     const res = await fetch('/api/sync/tradovate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: tvUsername,
-        password: tvPassword,
-        appId: tvAppId,
-        useDemo: tvUseDemo,
-      }),
+      body: JSON.stringify(body),
     })
     const data = await res.json()
 
@@ -94,8 +95,8 @@ export default function SettingsPage() {
 
   const copyWebhook = () => {
     navigator.clipboard.writeText(webhookUrl)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setWebhookCopied(true)
+    setTimeout(() => setWebhookCopied(false), 2000)
   }
 
   return (
@@ -167,29 +168,37 @@ export default function SettingsPage() {
               </div>
               <span className="font-medium">Tradovate</span>
             </div>
+            <p className="text-sm text-muted-foreground">
+              To connect, first create an API Application in your Tradovate Account (<span className="text-foreground">My Profile &gt; API Applications &gt; Create Application</span>). 
+              Use the App ID and App Secret from that page. Then fill in your Tradovate login credentials below.
+            </p>
             <div className="space-y-2">
               <Label htmlFor="tvUsername">Tradovate Username</Label>
               <Input id="tvUsername" placeholder="Your Tradovate username" value={tvUsername} onChange={(e) => setTvUsername(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tvPassword">Password</Label>
+              <Label htmlFor="tvPassword">Tradovate Password</Label>
               <Input id="tvPassword" type="password" placeholder="Your Tradovate password" value={tvPassword} onChange={(e) => setTvPassword(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tvAppId">App ID</Label>
-              <Input id="tvAppId" placeholder="TradeJournal" value={tvAppId} onChange={(e) => setTvAppId(e.target.value)} />
+              <Label htmlFor="tvAppId">App ID <span className="text-muted-foreground font-normal">(from Tradovate API Application)</span></Label>
+              <Input id="tvAppId" placeholder="e.g. SampleApp" value={tvAppId} onChange={(e) => setTvAppId(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tvAppSecret">App Secret <span className="text-muted-foreground font-normal">(optional, if your app requires it)</span></Label>
+              <Input id="tvAppSecret" type="password" placeholder="Leave blank if not needed" value={tvAppSecret} onChange={(e) => setTvAppSecret(e.target.value)} />
             </div>
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={tvUseDemo} onChange={(e) => setTvUseDemo(e.target.checked)} className="rounded border-border" />
               Use Demo account
             </label>
             {tvResult && (
-              <div className={`flex items-center gap-2 text-sm p-3 rounded-md ${tvResult.success ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                {tvResult.success ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
+              <div className={`flex items-start gap-2 text-sm p-3 rounded-md ${tvResult.success ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                {tvResult.success ? <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" /> : <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />}
                 {tvResult.message}
               </div>
             )}
-            <Button type="submit" disabled={tvSyncing || !tvUsername || !tvPassword}>
+            <Button type="submit" disabled={tvSyncing || !tvUsername || !tvPassword || !tvAppId}>
               {tvSyncing ? 'Connecting...' : 'Connect & Sync Trades'}
             </Button>
           </form>
@@ -212,7 +221,7 @@ export default function SettingsPage() {
                 <Copy className="h-4 w-4" />
               </Button>
             </div>
-            {copied && <p className="text-xs text-green-500">Copied!</p>}
+            {webhookCopied && <p className="text-xs text-green-500">Copied!</p>}
 
             <div className="bg-muted/50 rounded-lg p-4">
               <p className="text-xs font-medium mb-2">Expected JSON format:</p>
@@ -226,13 +235,6 @@ export default function SettingsPage() {
                 broker: 'exness',
               }, null, 2)}</pre>
             </div>
-
-            {excessResult && (
-              <div className={`flex items-center gap-2 text-sm p-3 rounded-md ${excessResult.success ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                {excessResult.success ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <AlertCircle className="h-4 w-4 shrink-0" />}
-                {excessResult.message}
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>

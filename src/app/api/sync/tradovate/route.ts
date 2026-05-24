@@ -8,13 +8,14 @@ export async function POST(request: Request) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const { username, password, appId, useDemo } = await request.json()
+    const { username, password, appId, appSecret, useDemo } = await request.json()
     if (!username || !password) {
       return NextResponse.json({ error: 'Username and password are required' }, { status: 400 })
     }
 
-    const credentials = await authenticate(username, password, appId || 'TradeJournal', '1.0', useDemo)
-    const accounts = await getAccounts(username, password, appId || 'TradeJournal', useDemo)
+    const credsAppId = appId || 'TradeJournal'
+    const credentials = await authenticate(username, password, credsAppId, '1.0', useDemo, appSecret)
+    const accounts = await getAccounts(username, password, credsAppId, useDemo)
 
     const endDate = new Date().toISOString().split('T')[0]
     const startDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
