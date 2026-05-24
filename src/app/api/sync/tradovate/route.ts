@@ -15,11 +15,11 @@ export async function POST(request: Request) {
 
     const credsAppId = appId || 'TradeJournal'
     const credentials = await authenticate(username, password, credsAppId, '1.0', useDemo, appSecret)
-    const accounts = await getAccounts(username, password, credsAppId, useDemo)
+    const accounts = await getAccounts(username, password, credsAppId, useDemo, appSecret)
 
     const endDate = new Date().toISOString().split('T')[0]
     const startDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-    const fills = await getFills(username, password, startDate, endDate, appId || 'TradeJournal', useDemo)
+    const fills = await getFills(username, password, startDate, endDate, credsAppId, useDemo, appSecret)
 
     let imported = 0
     for (const fill of fills) {

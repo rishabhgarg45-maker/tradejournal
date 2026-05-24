@@ -30,13 +30,12 @@ export default function SettingsPage() {
 
   const [tvUsername, setTvUsername] = useState('')
   const [tvPassword, setTvPassword] = useState('')
-  const [tvAppId, setTvAppId] = useState('')
+  const [tvAppId, setTvAppId] = useState('TradeJournal')
   const [tvAppSecret, setTvAppSecret] = useState('')
   const [tvUseDemo, setTvUseDemo] = useState(true)
   const [tvSyncing, setTvSyncing] = useState(false)
   const [tvResult, setTvResult] = useState<SyncResult | null>(null)
 
-  const [copyBtnLabel, setCopyBtnLabel] = useState('Copy')
   const [webhookCopied, setWebhookCopied] = useState(false)
 
   const webhookUrl = typeof window !== 'undefined'
@@ -169,8 +168,8 @@ export default function SettingsPage() {
               <span className="font-medium">Tradovate</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              To connect, first create an API Application in your Tradovate Account (<span className="text-foreground">My Profile &gt; API Applications &gt; Create Application</span>). 
-              Use the App ID and App Secret from that page. Then fill in your Tradovate login credentials below.
+              Enter your Tradovate login credentials (same ones you use with your Lucid account). 
+              No API registration needed — <span className="text-foreground">App ID</span> is just a label for this app.
             </p>
             <div className="space-y-2">
               <Label htmlFor="tvUsername">Tradovate Username</Label>
@@ -181,12 +180,12 @@ export default function SettingsPage() {
               <Input id="tvPassword" type="password" placeholder="Your Tradovate password" value={tvPassword} onChange={(e) => setTvPassword(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tvAppId">App ID <span className="text-muted-foreground font-normal">(from Tradovate API Application)</span></Label>
-              <Input id="tvAppId" placeholder="e.g. SampleApp" value={tvAppId} onChange={(e) => setTvAppId(e.target.value)} />
+              <Label htmlFor="tvAppId">App ID <span className="text-muted-foreground font-normal">(optional label, defaults to TradeJournal)</span></Label>
+              <Input id="tvAppId" placeholder="TradeJournal" value={tvAppId} onChange={(e) => setTvAppId(e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="tvAppSecret">App Secret <span className="text-muted-foreground font-normal">(optional, if your app requires it)</span></Label>
-              <Input id="tvAppSecret" type="password" placeholder="Leave blank if not needed" value={tvAppSecret} onChange={(e) => setTvAppSecret(e.target.value)} />
+              <Label htmlFor="tvAppSecret">App Secret <span className="text-muted-foreground font-normal">(only if your Tradovate account requires it)</span></Label>
+              <Input id="tvAppSecret" type="password" placeholder="Leave blank" value={tvAppSecret} onChange={(e) => setTvAppSecret(e.target.value)} />
             </div>
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={tvUseDemo} onChange={(e) => setTvUseDemo(e.target.checked)} className="rounded border-border" />
@@ -198,7 +197,7 @@ export default function SettingsPage() {
                 {tvResult.message}
               </div>
             )}
-            <Button type="submit" disabled={tvSyncing || !tvUsername || !tvPassword || !tvAppId}>
+            <Button type="submit" disabled={tvSyncing || !tvUsername || !tvPassword}>
               {tvSyncing ? 'Connecting...' : 'Connect & Sync Trades'}
             </Button>
           </form>

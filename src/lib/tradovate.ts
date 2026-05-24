@@ -22,6 +22,10 @@ const DEMO_URL = 'https://demo.tradovateapi.com/v1'
 
 let authCache: { credentials: TradovateCredentials; expiry: number } | null = null
 
+function generateCid(): string {
+  return 'tj-' + Math.random().toString(36).substring(2, 10)
+}
+
 export async function authenticate(
   name: string,
   password: string,
@@ -31,11 +35,19 @@ export async function authenticate(
   appSecret?: string
 ): Promise<TradovateCredentials> {
   const base = useDemo ? DEMO_URL : BASE_URL
+  const cid = generateCid()
 
-  const body: any = { name, password, appId, appVersion, cid: 'TradeJournal' }
+  const body: Record<string, string> = {
+    name,
+    password,
+    appId,
+    appVersion,
+    cid,
+    deviceId: cid,
+  }
   if (appSecret) body.sec = appSecret
 
-  const res = await fetch(`${base}/auth/accesstoken`, {
+  const res = await fetch(`${base}/auth/accesstokenrequest`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -47,7 +59,7 @@ export async function authenticate(
     let msg = text
     try {
       const j = JSON.parse(text)
-      msg = j.error || j.message || text
+      msg = j.error || j.errorText || j.message || text
     } catch {}
     throw new Error(msg)
   }
@@ -60,7 +72,7 @@ export async function authenticate(
   }
 
   if (!data.accessToken) {
-    throw new Error(data.error || data.message || 'No access token received')
+    throw new Error(data.error || data.errorText || data.message || 'No access token received')
   }
 
   const credentials: TradovateCredentials = {
@@ -73,11 +85,11 @@ export async function authenticate(
   return credentials
 }
 
-async function getAccessToken(name: string, password: string, appId?: string, useDemo?: boolean): Promise<string> {
+async function getAccessToken(name: string, password: string, appId?: string, useDemo?: boolean, appSecret?: string): Promise<string> {
   if (authCache && authCache.expiry > Date.now()) {
     return authCache.credentials.accessToken
   }
-  const creds = await authenticate(name, password, appId, '1.0', useDemo)
+  const creds = await authenticate(name, password, appId, '1.0', useDemo, appSecret)
   return creds.accessToken
 }
 
@@ -85,9 +97,10 @@ export async function getAccounts(
   name: string,
   password: string,
   appId?: string,
-  useDemo?: boolean
+  useDemo?: boolean,
+  appSecret?: string
 ): Promise<any[]> {
-  const token = await getAccessToken(name, password, appId, useDemo)
+  const token = await getAccessToken(name, password, appId, useDemo, appSecret)
   const base = useDemo ? DEMO_URL : BASE_URL
 
   const res = await fetch(`${base}/account/list`, {
@@ -104,15 +117,16 @@ export async function getFills(
   startDate: string,
   endDate: string,
   appId?: string,
-  useDemo?: boolean
+  useDemo?: boolean,
+  appSecret?: string
 ): Promise<TradovateFill[]> {
-  const token = await getAccessToken(name, password, appId, useDemo)
+  const token = await getAccessToken(name, password, appId, useDemo, appSecret)
   const base = useDemo ? DEMO_URL : BASE_URL
 
   const res = await fetch(`${base}/fill/list`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
