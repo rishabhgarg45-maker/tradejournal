@@ -11,6 +11,7 @@ import {
   Trash2,
   Edit3,
   ExternalLink,
+  Image,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -37,6 +38,7 @@ export function TradeTable({ trades, onDelete }: TradeTableProps) {
             <tr className="border-b border-border">
               <th className="text-left py-3 px-3 font-medium text-muted-foreground">Date</th>
               <th className="text-left py-3 px-3 font-medium text-muted-foreground">Symbol</th>
+              <th className="text-center py-3 px-3 font-medium text-muted-foreground">Img</th>
               <th className="text-left py-3 px-3 font-medium text-muted-foreground">Dir</th>
               <th className="text-right py-3 px-3 font-medium text-muted-foreground">Entry</th>
               <th className="text-right py-3 px-3 font-medium text-muted-foreground">Exit</th>
@@ -59,6 +61,11 @@ export function TradeTable({ trades, onDelete }: TradeTableProps) {
                     {formatDate(trade.entry_date)}
                   </td>
                   <td className="py-3 px-3 font-medium">{trade.symbol}</td>
+                  <td className="py-3 px-3 text-center">
+                    {trade.screenshot_url ? (
+                      <Image className="h-3.5 w-3.5 text-muted-foreground inline" />
+                    ) : null}
+                  </td>
                   <td className="py-3 px-3">
                     <Badge variant={trade.direction === 'LONG' ? 'success' : 'danger'} className="whitespace-nowrap">
                       {trade.direction === 'LONG' ? (
@@ -119,8 +126,9 @@ export function TradeTable({ trades, onDelete }: TradeTableProps) {
 
           return (
             <div key={trade.id} className="bg-card border border-border rounded-lg p-4">
-              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
+                  {trade.screenshot_url && <Image className="h-3.5 w-3.5 text-muted-foreground" />}
                   <span className="text-base font-bold">{trade.symbol}</span>
                   <Badge variant={trade.direction === 'LONG' ? 'success' : 'danger'} className="text-[11px]">
                     {trade.direction === 'LONG' ? (

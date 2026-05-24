@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { SymbolInput } from '@/components/symbol-input'
+import { ScreenshotUpload } from '@/components/screenshot-upload'
 import { CmeContract } from '@/lib/cme-futures'
 
 const tradeSchema = z.object({
@@ -39,6 +40,7 @@ interface TradeFormProps {
 
 export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) {
   const [detectedContract, setDetectedContract] = useState<CmeContract | null>(null)
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(initialData?.screenshot_url || null)
   const { register, handleSubmit, formState: { errors, isSubmitting }, setValue, watch } = useForm<TradeFormValues>({
     resolver: zodResolver(tradeSchema),
     defaultValues: {
@@ -85,6 +87,7 @@ export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) 
       notes: data.notes || undefined,
       trade_type: data.trade_type,
       contract_multiplier: detectedContract?.multiplier,
+      screenshot_url: screenshotUrl || undefined,
       tags,
     })
   }
@@ -181,6 +184,11 @@ export function TradeForm({ onSubmit, initialData, isEditing }: TradeFormProps) 
         <Label htmlFor="notes">Notes</Label>
         <Textarea id="notes" rows={4} placeholder="Describe your trade..." {...register('notes')} />
       </div>
+
+      <ScreenshotUpload
+        currentUrl={initialData?.screenshot_url}
+        onUpload={setScreenshotUrl}
+      />
 
       <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Saving...' : isEditing ? 'Update Trade' : 'Log Trade'}

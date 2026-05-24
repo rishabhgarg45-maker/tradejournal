@@ -31,6 +31,7 @@ export default function NewTradePage() {
       setup: data.setup || null,
       tags: data.tags || [],
       notes: data.notes || null,
+      screenshot_url: data.screenshot_url || null,
       trade_type: data.trade_type,
       status: data.exit_price ? 'CLOSED' : 'OPEN',
       contract_multiplier: data.contract_multiplier ?? null,

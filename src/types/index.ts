@@ -45,6 +45,7 @@ export interface TradeFormData {
   notes?: string
   trade_type: TradeType
   contract_multiplier?: number
+  screenshot_url?: string
 }
 
 export interface TradeStats {

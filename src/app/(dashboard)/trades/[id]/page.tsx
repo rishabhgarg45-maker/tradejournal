@@ -54,6 +54,7 @@ export default function EditTradePage() {
         setup: formData.setup || null,
         tags: formData.tags || [],
         notes: formData.notes || null,
+        screenshot_url: formData.screenshot_url || null,
         trade_type: formData.trade_type,
         status: formData.exit_price ? 'CLOSED' : 'OPEN',
         contract_multiplier: formData.contract_multiplier ?? null,
@@ -98,6 +99,7 @@ export default function EditTradePage() {
     tags: trade.tags || [],
     notes: trade.notes || undefined,
     trade_type: trade.trade_type,
+    screenshot_url: trade.screenshot_url || undefined,
   }
 
   return (
