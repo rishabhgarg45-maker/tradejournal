@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server'
+import { createAdminClient } from '@/lib/supabase-admin'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -23,32 +24,27 @@ export async function POST(request: Request) {
     const fileName = `${user.id}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`
 
     const buffer = Buffer.from(await file.arrayBuffer())
+    const admin = createAdminClient()
 
-    const { error: uploadError } = await supabase.storage
+    const { error: bucketError } = await admin.storage.createBucket('trade-screenshots', {
+      public: true,
+    })
+    if (bucketError && !bucketError.message.includes('already exists')) {
+      return NextResponse.json({ error: `Bucket error: ${bucketError.message}` }, { status: 500 })
+    }
+
+    const { error: uploadError } = await admin.storage
       .from('trade-screenshots')
       .upload(fileName, buffer, {
         contentType: file.type,
         upsert: false,
       })
 
-    if (uploadError?.message?.includes('bucket') || uploadError?.message?.includes('not found')) {
-      const { error: bucketError } = await supabase.storage.createBucket('trade-screenshots', {
-        public: true,
-      })
-      if (bucketError) {
-        return NextResponse.json({ error: `Bucket error: ${bucketError.message}` }, { status: 500 })
-      }
-      const { error: retryError } = await supabase.storage
-        .from('trade-screenshots')
-        .upload(fileName, buffer, { contentType: file.type })
-      if (retryError) {
-        return NextResponse.json({ error: `Upload failed: ${retryError.message}` }, { status: 500 })
-      }
-    } else if (uploadError) {
+    if (uploadError) {
       return NextResponse.json({ error: `Upload failed: ${uploadError.message}` }, { status: 500 })
     }
 
-    const { data: publicUrl } = supabase.storage
+    const { data: publicUrl } = admin.storage
       .from('trade-screenshots')
       .getPublicUrl(fileName)
 
